@@ -1,0 +1,31 @@
+MODULE main
+VAR
+    bal : array 0..2 of 0..5;
+    state : array 0..2 of {D, W, L, R, I};
+    incoming_funds : array 0..2 of 0..2;
+ASSIGN
+
+    init(bal[0]) := 0;
+    init(bal[1]) := 0;
+    init(bal[2]) := 0;
+
+    next(state[0]) := {D, W, L, R, I};
+    next(state[1]) := {D, W, L, R, I};
+    next(state[2]) := {D, W, L, R, I};
+
+    next(transfer_in[0]) := case
+        
+        state[1] = L & bal[0] < 4 | (bal[0] < 5 & state[0] != D) | (state[0] = W | state[0] = L | state[0] = R) : 1
+
+    esac;
+
+    next(bal[0]) := case
+        state[1] = L & bal[0] > 0 & bal[2] < 5 & !(state[2] = D & bal[2] = 4) : bal[0] + 1;
+        state[2] = R & bal[0] > 0 & bal[1] < 5 & !(state[1] = D & bal[1] = 4) : bal[0] + 1;
+        state[0] = D & bal[0] < 5 : bal[0] + 1;
+        state[0] = W & bal[0] > 0 : bal[0] - 1;
+        state[0] = L & bal[0] > 0 & bal[1] < 5 : bal[0] - 1;
+        state[0] = R & bal[0] > 0 & bal[2] < 5 : bal[0] - 1;
+        TRUE : bal[0];
+    esac;
+
