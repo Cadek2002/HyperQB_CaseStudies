@@ -1,0 +1,11 @@
+MODULE main
+VAR
+    password : 0..1; -- (none = 0, userPassword = 1, adminPassword = 2, badPassword = 3)
+ASSIGN
+    -- Starting values
+    init(password) := 1; -- none
+    --Transition Rules
+    next(password) := case
+        (password = 1) : {1};
+        TRUE: {0};
+    esac;
